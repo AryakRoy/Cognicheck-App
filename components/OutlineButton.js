@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import colors from '../assets/colors/colors'
+import colors from '../assets/materials/colors'
+import dimensions from '../assets/materials/constants'
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+const [width, height] = dimensions;
 
 const OutlineButton = ({ buttonText, handlePress }) => {
     return (

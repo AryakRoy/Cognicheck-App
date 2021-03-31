@@ -1,7 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
-import colors from '../assets/colors/colors.js';
+import colors from '../assets/materials/colors.js';
 import AppIntroSlider from 'react-native-app-intro-slider';
+import dimensions from '../assets/materials/constants.js'
+
+const [width, height] = dimensions;
 
 const Onboard = ({ navigation }) => {
     const data = [
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     },
     image: {
         marginVertical: 0,
-        width: Dimensions.get('window').width - 40,
+        width: width - 40,
         resizeMode: 'contain'
     },
     title: {

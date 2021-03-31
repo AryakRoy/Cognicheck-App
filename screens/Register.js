@@ -4,37 +4,20 @@ import {
     Text,
     View,
     ImageBackground,
-    Dimensions,
     SafeAreaView,
     KeyboardAvoidingView,
-    Keyboard,
-    TouchableWithoutFeedback
 } from 'react-native'
-import { DefaultTheme, TextInput } from 'react-native-paper';
-import colors from '../assets/colors/colors';
+import { TextInput } from 'react-native-paper';
+import colors from '../assets/materials/colors';
+import dimensions from '../assets/materials/constants';
+import theme from '../assets/materials/theme';
 import GradientButton from '../components/GradientButton'
+import DismissKeyboard from '../assets/materials/DismissKeyboard'
 
 const images = {
     "background": require('../assets/background-images/Background.png'),
 };
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
-
-const theme = {
-    ...DefaultTheme,
-    colors: {
-        ...DefaultTheme.colors,
-        primary: colors.blue,
-        background: '#fff'
-    },
-};
-
-const DismissKeyboard = ({ children }) => (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        {children}
-    </TouchableWithoutFeedback>
-);
+const [width, height] = dimensions
 
 const Login = ({ navigation }) => {
     useLayoutEffect(() => {

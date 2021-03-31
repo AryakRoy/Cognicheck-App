@@ -1,15 +1,14 @@
 import React from 'react'
 import { StyleSheet, Text, View, ImageBackground, Image, Dimensions, SafeAreaView, Platform } from 'react-native'
 import OutlineButton from '../components/OutlineButton'
-import colors from '../assets/colors/colors'
+import colors from '../assets/materials/colors'
+import dimensions from '../assets/materials/constants'
 
 const images = {
-    "background": require('../assets/background-images/HomeUnsignedBackground.png'),
-    "doctor": require('../assets/images/doctor.png')
+    "background": require('../assets/background-images/LandingBackground.png'),
 };
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+const [width, height] = dimensions;
 const leftMargin = width * (47 / 414)
 
 const Landing = ({ navigation }) => {
@@ -59,14 +58,6 @@ const styles = StyleSheet.create({
     },
     logo_android: {
         marginTop: 50,
-    },
-    doctor: {
-        width: width * (200 / 414),
-        height: height * (383 / 896),
-        resizeMode: 'contain',
-        marginTop: 50,
-        alignSelf: 'center',
-        marginLeft: 50
     },
     welcomeWrapper: {
         position: 'absolute',

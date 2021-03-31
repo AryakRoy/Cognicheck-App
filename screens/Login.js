@@ -4,38 +4,21 @@ import {
     Text,
     View,
     ImageBackground,
-    Dimensions,
     SafeAreaView,
     KeyboardAvoidingView,
-    Keyboard,
-    TouchableWithoutFeedback
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { DefaultTheme, TextInput } from 'react-native-paper';
-import colors from '../assets/colors/colors';
+import colors from '../assets/materials/colors';
 import GradientButton from '../components/GradientButton'
+import dimensions from '../assets/materials/constants'
+import theme from '../assets/materials/theme'
+import { TextInput } from 'react-native-paper'
+import DismissKeyboard from '../assets/materials/DismissKeyboard'
 
 const images = {
     "background": require('../assets/background-images/Background.png'),
 };
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
-
-const theme = {
-    ...DefaultTheme,
-    colors: {
-        ...DefaultTheme.colors,
-        primary: colors.blue,
-        background: '#fff'
-    },
-};
-
-const DismissKeyboard = ({ children }) => (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        {children}
-    </TouchableWithoutFeedback>
-);
+const [width, height] = dimensions;
 
 const Login = ({ navigation }) => {
     useLayoutEffect(() => {
@@ -105,15 +88,6 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: width,
         height: height
-    },
-    doctor: {
-        width: width * (200 / 414),
-        height: height * (383 / 896),
-        resizeMode: 'contain',
-        marginTop: 0,
-        alignSelf: 'center',
-        marginLeft: 0,
-        flex: 0.5
     },
     input: {
         height: 40,

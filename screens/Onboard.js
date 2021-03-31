@@ -67,7 +67,7 @@ const Onboard = ({ navigation }) => {
         return item.title;
     }
     const handleDone = () => {
-        navigation.replace('Login')
+        navigation.replace('Landing')
     }
     return (
         <View style={{ flex: 1 }}>

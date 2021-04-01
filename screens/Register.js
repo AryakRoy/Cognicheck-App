@@ -1,18 +1,20 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import {
     StyleSheet,
     Text,
     View,
     ImageBackground,
     SafeAreaView,
-    KeyboardAvoidingView,
 } from 'react-native'
-import { TextInput } from 'react-native-paper';
+import { TextInput, HelperText } from 'react-native-paper';
 import colors from '../assets/materials/colors';
 import dimensions from '../assets/materials/constants';
 import theme from '../assets/materials/theme';
 import GradientButton from '../components/GradientButton'
 import DismissKeyboard from '../assets/materials/DismissKeyboard'
+import registerValidateInfo from '../assets/materials/registerValidateInfo'
+import error_messages from '../assets/materials/errorMessages'
+import { Ionicons } from '@expo/vector-icons';
 
 const images = {
     "background": require('../assets/background-images/Background.png'),
@@ -29,14 +31,165 @@ const Login = ({ navigation }) => {
             headerLeftContainerStyle: { paddingHorizontal: 10 }
         })
     }, [navigation])
+
+    const [name, setName] = useState({
+        value: '',
+        error: false,
+        error_message: ''
+    })
+    const [email, setEmail] = useState({
+        value: '',
+        error: false,
+        error_message: ''
+    })
+    const [password, setPassword] = useState({
+        value: '',
+        error: false,
+        error_message: ''
+    })
+    const [confirmPassword, setConfirmPassword] = useState({
+        value: '',
+        error: false,
+        error_message: ''
+    })
+    const [passwordVisibility, setPasswordVisibility] = useState(true)
+    const handleChangeName = (text) => {
+        setName((prevState) => {
+            return {
+                ...prevState,
+                value: text
+            }
+        })
+    }
+
+    const handleChangeEmail = (text) => {
+        setEmail((prevState) => {
+            return {
+                ...prevState,
+                value: text.toLowerCase()
+            }
+        })
+    }
+
+    const handleChangePassword = (text) => {
+        setPassword((prevState) => {
+            return {
+                ...prevState,
+                value: text
+            }
+        })
+    }
+
+    const handleChangeConfirmPassword = (text) => {
+        setConfirmPassword((prevState) => {
+            return {
+                ...prevState,
+                value: text
+            }
+        })
+    }
+    const register = () => {
+        const result = registerValidateInfo(name.value, email.value, password.value, confirmPassword.value);
+        if (result.status == true) {
+            alert('okay')
+        }
+        else {
+            let has_password = false;
+            let has_email = false;
+            let has_name = false;
+            let has_confirmPassword = false;
+            for (let key in result.messages) {
+                has_email = has_email != key.startsWith('email');
+                has_password = has_password != key.startsWith('password');
+                has_name = has_name != key.startsWith('name');
+                has_confirmPassword = has_confirmPassword != key.startsWith('confirm');
+            }
+            if (has_password == false) {
+                setPassword((prevState) => {
+                    return {
+                        ...prevState,
+                        error: false,
+                        error_message: ''
+                    }
+                })
+            }
+            if (has_email == false) {
+                setEmail((prevState) => {
+                    return {
+                        ...prevState,
+                        error: false,
+                        error_message: ''
+                    }
+                })
+            }
+            if (has_name == false) {
+                setName((prevState) => {
+                    return {
+                        ...prevState,
+                        error: false,
+                        error_message: ''
+                    }
+                })
+            }
+            if (has_confirmPassword == false) {
+                setConfirmPassword((prevState) => {
+                    return {
+                        ...prevState,
+                        error: false,
+                        error_message: ''
+                    }
+                })
+            }
+            for (let key in error_messages) {
+                if (result.messages.includes(key)) {
+                    if (key.startsWith('name')) {
+                        setName((prevState) => {
+                            return {
+                                ...prevState,
+                                error: true,
+                                error_message: error_messages[key]
+                            }
+                        })
+                    }
+                    else if (key.startsWith('email')) {
+                        setEmail((prevState) => {
+                            return {
+                                ...prevState,
+                                error: true,
+                                error_message: error_messages[key]
+                            }
+                        })
+                    }
+                    else if (key.startsWith('password')) {
+                        setPassword((prevState) => {
+                            return {
+                                ...prevState,
+                                error: true,
+                                error_message: error_messages[key]
+                            }
+                        })
+                    }
+                    else if (key.startsWith('confirm')) {
+                        setConfirmPassword((prevState) => {
+                            return {
+                                ...prevState,
+                                error: true,
+                                error_message: error_messages[key]
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
     return (
         <DismissKeyboard>
             <View style={styles.container}>
                 <ImageBackground source={images.background} style={styles.background}>
                     <SafeAreaView>
-                        <KeyboardAvoidingView behavior="position" style={Platform.OS === "ios" ? styles.header_ios : styles.header_android}>
+                        <View style={Platform.OS === "ios" ? styles.header_ios : styles.header_android}>
                             <View style={styles.header}>
-                                <Text style={[styles.text, styles.heading]}>Signup</Text>
+                                <Text style={[styles.text, styles.heading]}>Register</Text>
                                 <Text style={[styles.text, styles.subheading]}>Hello! Let's get you started</Text>
                             </View>
                             <View>
@@ -47,7 +200,13 @@ const Login = ({ navigation }) => {
                                     style={styles.input}
                                     placeholder="Enter Full Name"
                                     autoCorrect={false}
+                                    value={name.value}
+                                    error={name.error}
+                                    onChangeText={(text) => handleChangeName(text)}
                                 />
+                                <HelperText theme={theme} type="error" visible={name.error} style={styles.helperText}>
+                                    {name.error_message}
+                                </HelperText>
                                 <TextInput
                                     label="Email"
                                     theme={theme}
@@ -56,31 +215,64 @@ const Login = ({ navigation }) => {
                                     placeholder="Enter Email"
                                     keyboardType='email-address'
                                     autoCorrect={false}
+                                    value={email.value}
+                                    error={email.error}
+                                    onChangeText={(text) => handleChangeEmail(text)}
                                 />
+                                <HelperText theme={theme} type="error" visible={email.error} style={styles.helperText}>
+                                    {email.error_message}
+                                </HelperText>
                                 <TextInput
                                     label="Password"
                                     theme={theme}
                                     mode="outlined"
                                     style={styles.input}
-                                    secureTextEntry
+                                    secureTextEntry={passwordVisibility}
                                     placeholder="Enter Password"
                                     autoCorrect={false}
+                                    value={password.value}
+                                    error={password.error}
+                                    onChangeText={(text) => handleChangePassword(text)}
+                                    right={
+                                        <TextInput.Icon
+                                            style={styles.visibilityIcon}
+                                            name={() => <Ionicons name={passwordVisibility ? "eye-outline" : "eye-off-outline"} size={24} color={colors.blue} />}
+                                            onPress={() => setPasswordVisibility(!passwordVisibility)}
+                                        />
+                                    }
                                 />
+                                <HelperText theme={theme} type="error" visible={password.error} style={styles.helperText}>
+                                    {password.error_message}
+                                </HelperText>
                                 <TextInput
                                     label="Confirm Password"
                                     theme={theme}
                                     mode="outlined"
                                     style={styles.input}
-                                    secureTextEntry
+                                    secureTextEntry={passwordVisibility}
                                     placeholder="Renter Password"
                                     autoCorrect={false}
+                                    value={confirmPassword.value}
+                                    error={confirmPassword.error}
+                                    onChangeText={(text) => handleChangeConfirmPassword(text)}
+                                    right={
+                                        <TextInput.Icon
+                                            style={styles.visibilityIcon}
+                                            name={() => <Ionicons name={passwordVisibility ? "eye-outline" : "eye-off-outline"} size={24} color={colors.blue} />}
+                                            onPress={() => setPasswordVisibility(!passwordVisibility)}
+                                        />
+                                    }
                                 />
+                                <HelperText theme={theme} type="error" visible={confirmPassword.error} style={styles.helperText}>
+                                    {confirmPassword.error_message}
+                                </HelperText>
                                 <GradientButton
-                                    buttonText="Sign Up"
+                                    buttonText="Create Account"
                                     margin={30}
+                                    handlePress={register}
                                 />
                             </View>
-                        </KeyboardAvoidingView>
+                        </View>
                     </SafeAreaView>
                 </ImageBackground>
             </View>
@@ -106,15 +298,18 @@ const styles = StyleSheet.create({
         height: 40,
         width: width - 60,
         alignSelf: 'center',
-        margin: 10,
+        marginTop: 10,
     },
     header: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
     },
+    helperText: {
+        marginLeft: 20
+    },
     header_ios: {
-        marginTop: 100,
+        marginTop: 80,
     },
     header_android: {
         marginTop: 170,
@@ -130,6 +325,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginTop: 15
     },
+    visibilityIcon: {
+        marginTop: 15
+    }
 })
-
-

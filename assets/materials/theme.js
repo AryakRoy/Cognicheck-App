@@ -6,7 +6,8 @@ const theme = {
     colors: {
         ...DefaultTheme.colors,
         primary: colors.blue,
-        background: '#fff'
+        background: '#fff',
+        error: colors.red
     },
 };
 export default theme;

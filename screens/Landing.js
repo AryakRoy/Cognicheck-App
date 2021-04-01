@@ -21,11 +21,11 @@ const Landing = ({ navigation }) => {
                         <Text style={styles.welcomeHeader} >Welcome</Text>
                         <Text style={styles.welcomeSubtext}>Let's get you started</Text>
                         <OutlineButton
-                            buttonText="Log In"
+                            buttonText="Login"
                             handlePress={() => navigation.navigate('Login')}
                         />
                         <OutlineButton
-                            buttonText="Sign Up"
+                            buttonText="Create Account"
                             handlePress={() => navigation.navigate('Register')}
                         />
                     </View>

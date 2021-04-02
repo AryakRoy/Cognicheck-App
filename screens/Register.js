@@ -90,6 +90,12 @@ const Login = ({ navigation }) => {
         })
     }
     const register = () => {
+        setEmail((prevState) => {
+            return {
+                ...prevState,
+                value: prevState.value.toLowerCase()
+            }
+        })
         const result = registerValidateInfo(name.value, email.value, password.value, confirmPassword.value);
         if (result.status == true) {
             alert('okay')

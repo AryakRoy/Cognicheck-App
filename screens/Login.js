@@ -67,6 +67,12 @@ const Login = ({ navigation }) => {
     const handleForgotPasswordPress = () => navigation.navigate('Forgot Password')
 
     const login = () => {
+        setEmail((prevState) => {
+            return {
+                ...prevState,
+                value: prevState.value.toLowerCase()
+            }
+        })
         const result = loginValidateInfo(email.value, password.value);
         if (result.status == true) {
             alert('okay')

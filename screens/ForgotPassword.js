@@ -46,6 +46,12 @@ const ForgotPassword = ({ navigation }) => {
         })
     }
     const forgotPassword = () => {
+        setEmail((prevState) => {
+            return {
+                ...prevState,
+                value: prevState.value.toLowerCase()
+            }
+        })
         const result = forgotPasswordValidateInfo(email.value)
         if (result.status) {
             setEmail((prevState) => {

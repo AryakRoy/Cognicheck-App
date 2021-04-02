@@ -5,6 +5,7 @@ import {
     View,
     ImageBackground,
     SafeAreaView,
+    Platform
 } from 'react-native'
 import { TextInput, HelperText } from 'react-native-paper';
 import colors from '../assets/materials/colors';
@@ -66,7 +67,7 @@ const Login = ({ navigation }) => {
         setEmail((prevState) => {
             return {
                 ...prevState,
-                value: text.toLowerCase()
+                value: text
             }
         })
     }

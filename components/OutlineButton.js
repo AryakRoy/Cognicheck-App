@@ -1,6 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, Dimensions } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import colors from '../assets/materials/colors'
 import dimensions from '../assets/materials/constants'
 

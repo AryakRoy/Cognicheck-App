@@ -5,8 +5,7 @@ import {
     View,
     ImageBackground,
     SafeAreaView,
-    Alert,
-    ColorPropType
+    Platform
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import colors from '../assets/materials/colors';
@@ -51,7 +50,7 @@ const Login = ({ navigation }) => {
         setEmail((prevState) => {
             return {
                 ...prevState,
-                value: text.toLowerCase()
+                value: text
             }
         })
     }
@@ -70,7 +69,7 @@ const Login = ({ navigation }) => {
     const login = () => {
         const result = loginValidateInfo(email.value, password.value);
         if (result.status == true) {
-            Alert.alert('okay')
+            alert('okay')
         }
         else {
             let has_password = false;

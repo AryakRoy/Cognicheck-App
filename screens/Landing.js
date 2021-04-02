@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, ImageBackground, Image, Dimensions, SafeAreaView, Platform } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, SafeAreaView, Platform } from 'react-native'
 import OutlineButton from '../components/OutlineButton'
 import colors from '../assets/materials/colors'
 import dimensions from '../assets/materials/constants'

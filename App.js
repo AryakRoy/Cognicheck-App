@@ -9,6 +9,8 @@ import Landing from './screens/Landing'
 import Login from './screens/Login'
 import Register from './screens/Register.js'
 import ForgotPassword from './screens/ForgotPassword';
+import HomeTab from './screens/HomeTab';
+
 
 const AppStack = createStackNavigator();
 
@@ -20,14 +22,10 @@ export default function App() {
     'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
     'Roboto-Light': require('./assets/fonts/Roboto-Light.ttf')
   });
-  const [showOnboard, setshowOnboard] = useState(null);
+  const [showOnboard, setshowOnboard] = useState(true);
   useEffect(() => {
     AsyncStorage.getItem('alreadyLaunched').then(value => {
-      if (value == null) {
-        AsyncStorage.setItem('alreadyLaunched', 'true');
-        setshowOnboard(true);
-      }
-      else {
+      if (value != null) {
         setshowOnboard(false);
       }
     });
@@ -44,6 +42,7 @@ export default function App() {
           <AppStack.Screen component={Register} name="Register" />
           <AppStack.Screen component={Login} name="Login" />
           <AppStack.Screen component={ForgotPassword} name="Forgot Password" />
+          <AppStack.Screen component={HomeTab} name="HomeTab" options={{ headerShown: false }} />
         </AppStack.Navigator>
       </NavigationContainer>
     )

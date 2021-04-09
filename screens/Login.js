@@ -17,9 +17,10 @@ import DismissKeyboard from '../assets/materials/DismissKeyboard'
 import loginValidateInfo from '../assets/materials/loginValidateInfo'
 import error_messages from '../assets/materials/errorMessages'
 import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../firebase'
 
 const images = {
-    "background": require('../assets/background-images/Background.png'),
+    "background": require('../assets/images/Background.png'),
 };
 const [width, height] = dimensions;
 
@@ -75,7 +76,9 @@ const Login = ({ navigation }) => {
         })
         const result = loginValidateInfo(email.value, password.value);
         if (result.status == true) {
-            alert('okay')
+            auth
+                .signInWithEmailAndPassword(email.value, password.value)
+                .catch((error) => alert(error));
         }
         else {
             let has_password = false;
@@ -162,6 +165,7 @@ const Login = ({ navigation }) => {
                                 value={password.value}
                                 error={password.error}
                                 onChangeText={(text) => handleChangePassword(text)}
+                                textContentType={'oneTimeCode'}
                                 right={
                                     <TextInput.Icon
                                         style={styles.visibilityIcon}

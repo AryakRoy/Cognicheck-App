@@ -15,9 +15,10 @@ import GradientButton from '../components/GradientButton'
 import DismissKeyboard from '../assets/materials/DismissKeyboard'
 import forgotPasswordValidateInfo from '../assets/materials/forgotPasswordValidateInfo'
 import error_messages from '../assets/materials/errorMessages'
+import { auth } from '../firebase'
 
 const images = {
-    "background": require('../assets/background-images/Background.png'),
+    "background": require('../assets/images/Background.png'),
 };
 const [width, height] = dimensions
 
@@ -36,7 +37,6 @@ const ForgotPassword = ({ navigation }) => {
         error: false,
         error_message: ''
     })
-    const [message, setMessage] = useState('Enter your Email and check for a mail')
     const handleChangeEmail = (text) => {
         setEmail((prevState) => {
             return {
@@ -61,7 +61,13 @@ const ForgotPassword = ({ navigation }) => {
                     error_message: ''
                 }
             })
-            setMessage('We have sent you a mail to rest your password')
+            auth.sendPasswordResetEmail(email.value).then(function () {
+                alert('We have sent you a mail to rest your password')
+                navigation.goBack()
+            }).catch(function (error) {
+                alert(error)
+            });
+
         }
         else {
             setEmail((prevState) => {
@@ -80,7 +86,7 @@ const ForgotPassword = ({ navigation }) => {
                     <SafeAreaView>
                         <View style={[styles.header, Platform.OS === "ios" ? styles.header_ios : styles.header_android]}>
                             <Text style={[styles.text, styles.heading]}>Forgot Password ?</Text>
-                            <Text style={[styles.text, styles.subheading]}>{message}</Text>
+                            <Text style={[styles.text, styles.subheading]}>Enter your Email and check for a mail</Text>
                         </View>
                         <View style={{ marginTop: 50 }}>
                             <TextInput

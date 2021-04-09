@@ -1,17 +1,28 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, Text, View, ImageBackground, SafeAreaView, Platform } from 'react-native'
 import OutlineButton from '../components/OutlineButton'
 import colors from '../assets/materials/colors'
 import dimensions from '../assets/materials/constants'
+import { auth } from '../firebase'
 
 const images = {
-    "background": require('../assets/background-images/LandingBackground.png'),
+    "background": require('../assets/images/LandingBackground.png'),
 };
 
 const [width, height] = dimensions;
 const leftMargin = width * (47 / 414)
 
+
 const Landing = ({ navigation }) => {
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((authUser) => {
+            console.log(authUser)
+            if (authUser) {
+                navigation.replace('HomeTab')
+            }
+        });
+        return unsubscribe;
+    }, []);
     return (
         <View style={styles.container}>
             <ImageBackground source={images.background} style={styles.background}>

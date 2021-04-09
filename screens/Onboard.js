@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
 import colors from '../assets/materials/colors.js';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import dimensions from '../assets/materials/constants.js'
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const [width, height] = dimensions;
 
@@ -70,6 +71,7 @@ const Onboard = ({ navigation }) => {
         return item.title;
     }
     const handleDone = () => {
+        AsyncStorage.setItem('alreadyLaunched', 'true');
         navigation.replace('Landing')
     }
     return (

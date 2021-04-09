@@ -16,9 +16,10 @@ import DismissKeyboard from '../assets/materials/DismissKeyboard'
 import registerValidateInfo from '../assets/materials/registerValidateInfo'
 import error_messages from '../assets/materials/errorMessages'
 import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../firebase'
 
 const images = {
-    "background": require('../assets/background-images/Background.png'),
+    "background": require('../assets/images/Background.png'),
 };
 const [width, height] = dimensions
 
@@ -98,7 +99,13 @@ const Login = ({ navigation }) => {
         })
         const result = registerValidateInfo(name.value, email.value, password.value, confirmPassword.value);
         if (result.status == true) {
-            alert('okay')
+            auth.createUserWithEmailAndPassword(email.value, password.value)
+                .then(authUser => {
+                    authUser.user.updateProfile({
+                        displayName: name.value,
+                    })
+                })
+                .catch(error => alert(error.message));
         }
         else {
             let has_password = false;
@@ -240,6 +247,7 @@ const Login = ({ navigation }) => {
                                     value={password.value}
                                     error={password.error}
                                     onChangeText={(text) => handleChangePassword(text)}
+                                    textContentType={'oneTimeCode'}
                                     right={
                                         <TextInput.Icon
                                             style={styles.visibilityIcon}
@@ -262,6 +270,7 @@ const Login = ({ navigation }) => {
                                     value={confirmPassword.value}
                                     error={confirmPassword.error}
                                     onChangeText={(text) => handleChangeConfirmPassword(text)}
+                                    textContentType={'oneTimeCode'}
                                     right={
                                         <TextInput.Icon
                                             style={styles.visibilityIcon}

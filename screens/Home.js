@@ -53,10 +53,10 @@ const Home = ({ navigation }) => {
             <ScrollView>
                 <SafeAreaView>
                     <View style={Platform.OS == "ios" ? styles.menuWrapper_ios : styles.menuWrapper_android}>
-                        <TouchableOpacity>
-                            < Feather name="info" size={32} color={colors.blue} />
+                        <TouchableOpacity onPress={() => navigation.navigate('Info')}>
+                            <Feather name="info" size={32} color={colors.blue} />
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                             <AntDesign name="search1" size={32} color={colors.blue} />
                         </TouchableOpacity>
                     </View>

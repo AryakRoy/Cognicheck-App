@@ -12,6 +12,11 @@ import ForgotPassword from './screens/ForgotPassword';
 import HomeTab from './screens/HomeTab';
 import learnMoreDetails from './screens/learnMoreDetails'
 import tutorialDetails from './screens/tutorialDetails'
+import Search from './screens/Search';
+import Info from './screens/Info';
+import UpdateName from './screens/UpdateName';
+import UpdateEmail from './screens/UpdateEmail';
+import ChangePassword from './screens/ChangePassword';
 
 const AppStack = createStackNavigator();
 
@@ -44,8 +49,13 @@ export default function App() {
           <AppStack.Screen component={Login} name="Login" />
           <AppStack.Screen component={ForgotPassword} name="Forgot Password" />
           <AppStack.Screen component={HomeTab} name="HomeTab" options={{ headerShown: false }} />
+          <AppStack.Screen component={Search} name="Search" />
+          <AppStack.Screen component={Info} name="Info" />
           <AppStack.Screen component={learnMoreDetails} name="Learn More" />
           <AppStack.Screen component={tutorialDetails} name="Tutorial" />
+          <AppStack.Screen component={UpdateName} name="Update Name" />
+          <AppStack.Screen component={UpdateEmail} name="Update Email" />
+          <AppStack.Screen component={ChangePassword} name="ChangePassword" />
         </AppStack.Navigator>
       </NavigationContainer>
     )

@@ -102,14 +102,26 @@ const Profile = ({ navigation }) => {
                     <OptionsListItem
                         title="Update Name"
                         icon={<Feather name="edit-3" size={20} color={colors.black} />}
+                        handlePress={() => {
+                            refRBSheet.current.close();
+                            navigation.navigate('Update Name')
+                        }}
                     />
                     <OptionsListItem
                         title="Update Email"
                         icon={<Entypo name="email" size={20} color={colors.black} />}
+                        handlePress={() => {
+                            refRBSheet.current.close();
+                            navigation.navigate('Update Email')
+                        }}
                     />
                     <OptionsListItem
                         title="Change Password"
                         icon={<MaterialCommunityIcons name="onepassword" size={20} color={colors.black} />}
+                        handlePress={() => {
+                            refRBSheet.current.close();
+                            navigation.navigate('Change Password')
+                        }}
                     />
                     <OptionsListItem
                         title="Logout"

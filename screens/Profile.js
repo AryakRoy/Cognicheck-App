@@ -1,12 +1,11 @@
 import React, { useRef } from 'react'
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Platform, Image } from 'react-native'
 import { auth } from '../firebase'
 import OptionsListItem from '../components/optionsListItem'
 import colors from '../assets/materials/colors'
 import dimensions from '../assets/materials/constants';
 import getInitials from '../assets/materials/getInitials'
-import { Feather, MaterialIcons, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons'
-import { Image } from 'react-native'
+import { Feather, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -25,9 +24,9 @@ const Profile = ({ navigation }) => {
         email = user.email;
         initials = getInitials(name);
         createdAt = new Date(user.metadata.creationTime);
-        createdAt = `${createdAt.getDate()}-${createdAt.getMonth()}-${createdAt.getFullYear()}`
+        createdAt = `${createdAt.getDate()}-${createdAt.getMonth() + 1}-${createdAt.getFullYear()}`
         lastLogin = new Date(user.metadata.lastSignInTime);
-        lastLogin = `${lastLogin.getDate()}-${lastLogin.getMonth()}-${lastLogin.getFullYear()}`
+        lastLogin = `${lastLogin.getDate()}-${lastLogin.getMonth() + 1}-${lastLogin.getFullYear()}`
     }
     const signOut = () => {
         auth.signOut().then(() => {
@@ -38,7 +37,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.container}>
             <SafeAreaView>
                 <View>
-                    <Text style={styles.header}>Profile</Text>
+                    <Text style={[styles.header, Platform.OS == "ios" ? styles.header_margin_ios : styles.header_margin_android]}>Profile</Text>
                     <LinearGradient
                         style={styles.card}
                         colors={['rgba(156, 224, 220, 0.8)', 'rgba(156, 224, 220, 0.2)']}
@@ -119,7 +118,7 @@ const Profile = ({ navigation }) => {
                     />
                 </View>
             </RBSheet>
-        </View>
+        </View >
     )
 }
 
@@ -134,8 +133,13 @@ const styles = StyleSheet.create({
         fontFamily: 'Nunito-Semibold',
         fontSize: 32,
         color: colors.black,
-        marginTop: 30,
         marginHorizontal: 20
+    },
+    header_margin_android: {
+        marginTop: 80,
+    },
+    header_margin_ios: {
+        marginTop: 30,
     },
     card: {
         marginTop: 20,

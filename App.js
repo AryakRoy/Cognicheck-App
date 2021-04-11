@@ -10,7 +10,8 @@ import Login from './screens/Login'
 import Register from './screens/Register.js'
 import ForgotPassword from './screens/ForgotPassword';
 import HomeTab from './screens/HomeTab';
-
+import learnMoreDetails from './screens/learnMoreDetails'
+import tutorialDetails from './screens/tutorialDetails'
 
 const AppStack = createStackNavigator();
 
@@ -43,6 +44,8 @@ export default function App() {
           <AppStack.Screen component={Login} name="Login" />
           <AppStack.Screen component={ForgotPassword} name="Forgot Password" />
           <AppStack.Screen component={HomeTab} name="HomeTab" options={{ headerShown: false }} />
+          <AppStack.Screen component={learnMoreDetails} name="Learn More" />
+          <AppStack.Screen component={tutorialDetails} name="Tutorial" />
         </AppStack.Navigator>
       </NavigationContainer>
     )

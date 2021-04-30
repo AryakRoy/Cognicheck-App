@@ -13,16 +13,18 @@ import dimensions from '../assets/materials/constants';
 import theme from '../assets/materials/theme';
 import GradientButton from '../components/GradientButton'
 import DismissKeyboard from '../assets/materials/DismissKeyboard'
-import forgotPasswordValidateInfo from '../assets/materials/forgotPasswordValidateInfo'
 import error_messages from '../assets/materials/errorMessages'
 import { auth } from '../firebase'
+import { Ionicons } from '@expo/vector-icons';
+import * as firebase from 'firebase';
 
 const images = {
     "background": require('../assets/images/Background.png'),
 };
 const [width, height] = dimensions
 
-const ForgotPassword = ({ navigation }) => {
+const Reauthenticate = ({ route, navigation }) => {
+    const { path, comeBack } = route.params;
     useLayoutEffect(() => {
         navigation.setOptions({
             title: "",
@@ -32,51 +34,65 @@ const ForgotPassword = ({ navigation }) => {
             headerLeftContainerStyle: { paddingHorizontal: 10 }
         })
     }, [navigation])
-    const [email, setEmail] = useState({
+    const [password, setPassword] = useState({
         value: '',
         error: false,
         error_message: ''
     })
-    const handleChangeEmail = (text) => {
-        setEmail((prevState) => {
+    const [passwordVisibility, setPasswordVisibility] = useState(true)
+    const handleChangePassword = (text) => {
+        setPassword((prevState) => {
             return {
                 ...prevState,
                 value: text
             }
         })
     }
-    const forgotPassword = () => {
-        setEmail((prevState) => {
-            return {
-                ...prevState,
-                value: prevState.value.toLowerCase()
-            }
-        })
-        const result = forgotPasswordValidateInfo(email.value)
-        if (result.status) {
-            setEmail((prevState) => {
+    const reauthenticate = () => {
+        if (password.value.length >= 6) {
+            setPassword((prevState) => {
                 return {
                     ...prevState,
                     error: false,
                     error_message: ''
                 }
             })
-            auth.sendPasswordResetEmail(email.value).then(function () {
-                alert('We have sent you a mail to rest your password')
-                navigation.goBack()
+            const user = auth.currentUser
+            const credential = firebase.auth.EmailAuthProvider.credential(
+                user.email,
+                password.value
+            );
+            user.reauthenticateWithCredential(credential).then(function () {
+                if (comeBack) {
+                    navigation.goBack()
+                }
+                else {
+                    navigation.navigate(path)
+                }
             }).catch(function (error) {
                 alert(error)
             });
 
         }
         else {
-            setEmail((prevState) => {
-                return {
-                    ...prevState,
-                    error: true,
-                    error_message: error_messages[result.message]
-                }
-            })
+            if (password.value.length === 0) {
+                setPassword((prevState) => {
+                    return {
+                        ...prevState,
+                        error: true,
+                        error_message: error_messages['password_missing']
+                    }
+                })
+            }
+            else {
+                setPassword((prevState) => {
+                    return {
+                        ...prevState,
+                        error: true,
+                        error_message: error_messages['password_invalid']
+                    }
+                })
+            }
         }
     }
     return (
@@ -85,30 +101,37 @@ const ForgotPassword = ({ navigation }) => {
                 <ImageBackground source={images.background} style={styles.background}>
                     <SafeAreaView>
                         <View style={[styles.header, Platform.OS === "ios" ? styles.header_ios : styles.header_android]}>
-                            <Text style={[styles.text, styles.heading]}>Forgot Password ?</Text>
-                            <Text style={[styles.text, styles.subheading]}>Enter your Email and check for a mail</Text>
+                            <Text style={[styles.text, styles.heading]}>Re Authenticate</Text>
+                            <Text style={[styles.text, styles.subheading]}>Your Password is required for this operation</Text>
                         </View>
                         <View style={{ marginTop: 50 }}>
                             <TextInput
-                                label="Email"
+                                label="Password"
                                 theme={theme}
                                 mode="outlined"
                                 style={styles.input}
-                                placeholder="Enter Email"
-                                keyboardType='email-address'
+                                placeholder="Enter Password"
                                 autoCorrect={false}
-                                value={email.value}
-                                autoCapitalize="none"
-                                error={email.error}
-                                onChangeText={(text) => handleChangeEmail(text)}
+                                value={password.value}
+                                error={password.error}
+                                secureTextEntry={passwordVisibility}
+                                onChangeText={(text) => handleChangePassword(text)}
+                                textContentType={'oneTimeCode'}
+                                right={
+                                    <TextInput.Icon
+                                        style={styles.visibilityIcon}
+                                        name={() => <Ionicons name={passwordVisibility ? "eye-outline" : "eye-off-outline"} size={24} color={colors.blue} />}
+                                        onPress={() => setPasswordVisibility(!passwordVisibility)}
+                                    />
+                                }
                             />
-                            <HelperText theme={theme} type="error" visible={email.error} style={styles.helperText}>
-                                {email.error_message}
+                            <HelperText theme={theme} type="error" visible={password.error} style={styles.helperText}>
+                                {password.error_message}
                             </HelperText>
                             <GradientButton
-                                buttonText="Send Mail"
+                                buttonText="Re - Authenticate"
                                 margin={50}
-                                handlePress={() => forgotPassword()}
+                                handlePress={() => reauthenticate()}
                             />
                         </View>
                     </SafeAreaView>
@@ -118,7 +141,7 @@ const ForgotPassword = ({ navigation }) => {
     )
 }
 
-export default ForgotPassword
+export default Reauthenticate
 
 const styles = StyleSheet.create({
     container: {
@@ -163,4 +186,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         textAlign: 'center'
     },
+    visibilityIcon: {
+        marginTop: 15
+    }
 })

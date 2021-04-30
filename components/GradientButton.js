@@ -6,9 +6,9 @@ import colors from '../assets/materials/colors'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const GradientButton = ({ buttonText, margin, handlePress }) => {
+const GradientButton = ({ buttonText, margin, handlePress, style }) => {
     return (
-        <TouchableOpacity onPress={handlePress}>
+        <TouchableOpacity onPress={handlePress} style={style}>
             <LinearGradient
                 colors={['#4CA1AF', '#3D838E']}
                 start={{ x: 0, y: 1 }}

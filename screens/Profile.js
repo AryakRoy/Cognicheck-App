@@ -1,37 +1,51 @@
-import React, { useRef } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Platform, Image } from 'react-native'
-import { auth } from '../firebase'
+import React, { useRef, useState, useEffect } from 'react'
+import { StyleSheet, Text, View, SafeAreaView, Platform, Image, Alert } from 'react-native'
+import { auth, storageRef } from '../firebase'
 import OptionsListItem from '../components/optionsListItem'
 import colors from '../assets/materials/colors'
 import dimensions from '../assets/materials/constants';
-import getInitials from '../assets/materials/getInitials'
 import { Feather, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import RBSheet from "react-native-raw-bottom-sheet";
+import * as Linking from 'expo-linking';
 
 const [width, height] = dimensions
 const Profile = ({ navigation }) => {
-    const refRBSheet = useRef();
-    const user = auth.currentUser
-    let name = null
-    let email = null
-    let initials = null
-    let createdAt = null
-    let lastLogin = null
-    if (user != null) {
-        name = user.displayName;
-        email = user.email;
-        initials = getInitials(name);
-        createdAt = new Date(user.metadata.creationTime);
-        createdAt = `${createdAt.getDate()}-${createdAt.getMonth() + 1}-${createdAt.getFullYear()}`
-        lastLogin = new Date(user.metadata.lastSignInTime);
-        lastLogin = `${lastLogin.getDate()}-${lastLogin.getMonth() + 1}-${lastLogin.getFullYear()}`
-    }
+    const refRBSheet = useRef()
+    const [name, setname] = useState('')
+    const [email, setemail] = useState('')
+    const [createdAt, setcreatedAt] = useState(null)
+    const [lastLogin, setlastLogin] = useState(null)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const user = auth.currentUser
+            if (user != null) {
+                setname(user.displayName);
+                setemail(user.email);
+                let createdat = new Date(user.metadata.creationTime);
+                setcreatedAt(`${createdat.getDate()}-${createdat.getMonth() + 1}-${createdat.getFullYear()}`);
+                let lastlogin = new Date(user.metadata.lastSignInTime);
+                setlastLogin(`${lastlogin.getDate()}-${lastlogin.getMonth() + 1}-${lastlogin.getFullYear()}`);
+            }
+        }
+        fetchData()
+    }, [navigation])
     const signOut = () => {
         auth.signOut().then(() => {
             navigation.replace('Landing')
         })
+    }
+    const deleteAccount = () => {
+        const user = auth.currentUser
+        const uid = user.uid
+        var folderRef = storageRef.child(uid);
+        user.delete().then(function () {
+            navigation.replace('Landing')
+        }).catch(function (error) {
+            navigation.navigate('Reauthenticate', { path: 'Delete Account', comeBack: true })
+        });
     }
     return (
         <View style={styles.container}>
@@ -46,7 +60,6 @@ const Profile = ({ navigation }) => {
                         <View style={styles.cardLeft}>
                             <View style={styles.cardHeader}>
                                 <View style={styles.initialsWrapper}>
-                                    <Text style={styles.initials}>{initials}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => refRBSheet.current.open()}>
                                     <Feather name="settings" size={32} color={colors.black} />
@@ -67,6 +80,7 @@ const Profile = ({ navigation }) => {
                             <OptionsListItem
                                 title="Visit-Website"
                                 isbottom={true}
+                                handlePress={() => Linking.openURL('https://docs.expo.io/guides/linking/?redirected')}
                             />
                             <OptionsListItem
                                 title="Settings"
@@ -85,6 +99,7 @@ const Profile = ({ navigation }) => {
                 closeOnDragDown
                 closeOnPressMask
                 closeOnPressBack
+                height={290}
                 customStyles={{
                     wrapper: {
                         backgroundColor: "transparent",
@@ -112,7 +127,7 @@ const Profile = ({ navigation }) => {
                         icon={<Entypo name="email" size={20} color={colors.black} />}
                         handlePress={() => {
                             refRBSheet.current.close();
-                            navigation.navigate('Update Email')
+                            navigation.navigate('Reauthenticate', { path: 'Update Email', comeBack: false })
                         }}
                     />
                     <OptionsListItem
@@ -120,7 +135,28 @@ const Profile = ({ navigation }) => {
                         icon={<MaterialCommunityIcons name="onepassword" size={20} color={colors.black} />}
                         handlePress={() => {
                             refRBSheet.current.close();
-                            navigation.navigate('Change Password')
+                            navigation.navigate('Reauthenticate', { path: 'Change Password', comeBack: false })
+                        }}
+                    />
+                    <OptionsListItem
+                        title="Delete Account"
+                        icon={<MaterialCommunityIcons name="delete" size={20} color={colors.black} />}
+                        handlePress={() => {
+                            Alert.alert(
+                                "Delete Account Confirmation",
+                                "Do you want to delete your account ?",
+                                [
+                                    {
+                                        text: "Cancel",
+                                        onPress: () => { refRBSheet.current.close(); }
+                                    },
+                                    {
+                                        text: "Delete Account",
+                                        onPress: () => { refRBSheet.current.close(); deleteAccount(); }
+                                    }
+                                ],
+                                { cancelable: false }
+                            );
                         }}
                     />
                     <OptionsListItem

@@ -149,6 +149,7 @@ const Login = ({ navigation }) => {
                                 autoCorrect={false}
                                 value={email.value}
                                 error={email.error}
+                                autoCapitalize="none"
                                 onChangeText={(text) => handleChangeEmail(text)}
                             />
                             <HelperText theme={theme} type="error" visible={email.error} style={styles.helperText}>

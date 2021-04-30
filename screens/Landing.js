@@ -16,7 +16,6 @@ const leftMargin = width * (47 / 414)
 const Landing = ({ navigation }) => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((authUser) => {
-            console.log(authUser)
             if (authUser) {
                 navigation.replace('HomeTab')
             }

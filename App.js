@@ -17,6 +17,9 @@ import Info from './screens/Info';
 import UpdateName from './screens/UpdateName';
 import UpdateEmail from './screens/UpdateEmail';
 import ChangePassword from './screens/ChangePassword';
+import Reauthenticate from './screens/Reauthenticate';
+import PatientProfile from './screens/PatientProfile';
+import PatientResult from './screens/PatientResult';
 
 const AppStack = createStackNavigator();
 
@@ -55,7 +58,10 @@ export default function App() {
           <AppStack.Screen component={tutorialDetails} name="Tutorial" />
           <AppStack.Screen component={UpdateName} name="Update Name" />
           <AppStack.Screen component={UpdateEmail} name="Update Email" />
-          <AppStack.Screen component={ChangePassword} name="ChangePassword" />
+          <AppStack.Screen component={ChangePassword} name="Change Password" />
+          <AppStack.Screen component={Reauthenticate} name="Reauthenticate" />
+          <AppStack.Screen component={PatientProfile} name="Patient Profile" />
+          <AppStack.Screen component={PatientResult} name="Patient Result" />
         </AppStack.Navigator>
       </NavigationContainer>
     )

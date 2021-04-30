@@ -6,7 +6,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyB0r5Ajw1_0MR3jLAToPq3ecGHtinrq0E0",
     authDomain: "cognicheck.firebaseapp.com",
     projectId: "cognicheck",
-    storageBucket: "cognicheck.appspot.com",
+    storageBucket: "gs://cognicheck.appspot.com",
     messagingSenderId: "137980277536",
     appId: "1:137980277536:web:48d1fa51494deb85e7dd45",
     measurementId: "G-ZHTMWYGYFR"
@@ -22,5 +22,6 @@ else {
 
 const db = app.firestore();
 const auth = firebase.auth();
-
-export { db, auth };
+var storage = app.storage();
+var storageRef = storage.ref();
+export { db, auth, storageRef };

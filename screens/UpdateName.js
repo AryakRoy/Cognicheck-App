@@ -14,7 +14,7 @@ import theme from '../assets/materials/theme';
 import GradientButton from '../components/GradientButton'
 import DismissKeyboard from '../assets/materials/DismissKeyboard'
 import { auth } from '../firebase'
-
+import Spinner from 'react-native-loading-spinner-overlay';
 const images = {
     "background": require('../assets/images/Background.png'),
 };
@@ -35,6 +35,7 @@ const UpdateName = ({ navigation }) => {
         error: false,
         error_message: ''
     })
+    const [loading, setLoading] = useState(false);
     const handleChangeName = (text) => {
         setName((prevState) => {
             return {
@@ -44,6 +45,7 @@ const UpdateName = ({ navigation }) => {
         })
     }
     const resetName = () => {
+        setLoading(true)
         if (name.value.length > 0) {
             setName((prevState) => {
                 return {
@@ -56,14 +58,17 @@ const UpdateName = ({ navigation }) => {
             user.updateProfile({
                 displayName: name.value
             }).then(function () {
+                setLoading(false);
                 alert('Your name has been updated')
                 navigation.replace('HomeTab')
             }).catch(function (error) {
+                setLoading(false);
                 alert(error)
             });
 
         }
         else {
+            setLoading(false);
             setName((prevState) => {
                 return {
                     ...prevState,
@@ -76,6 +81,9 @@ const UpdateName = ({ navigation }) => {
     return (
         <DismissKeyboard>
             <View style={styles.container}>
+                <Spinner
+                    visible={loading}
+                />
                 <ImageBackground source={images.background} style={styles.background}>
                     <SafeAreaView>
                         <View style={[styles.header, Platform.OS === "ios" ? styles.header_ios : styles.header_android]}>

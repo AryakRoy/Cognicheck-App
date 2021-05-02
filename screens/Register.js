@@ -17,6 +17,7 @@ import registerValidateInfo from '../assets/materials/registerValidateInfo'
 import error_messages from '../assets/materials/errorMessages'
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebase'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const images = {
     "background": require('../assets/images/Background.png'),
@@ -55,6 +56,7 @@ const Login = ({ navigation }) => {
         error_message: ''
     })
     const [passwordVisibility, setPasswordVisibility] = useState(true)
+    const [loading, setLoading] = useState(false)
     const handleChangeName = (text) => {
         setName((prevState) => {
             return {
@@ -91,6 +93,7 @@ const Login = ({ navigation }) => {
         })
     }
     const register = () => {
+        setLoading(true)
         setEmail((prevState) => {
             return {
                 ...prevState,
@@ -101,11 +104,15 @@ const Login = ({ navigation }) => {
         if (result.status == true) {
             auth.createUserWithEmailAndPassword(email.value, password.value)
                 .then(authUser => {
+                    setLoading(false);
                     authUser.user.updateProfile({
                         displayName: name.value,
                     })
                 })
-                .catch(error => alert(error.message));
+                .catch(error => {
+                    setLoading(false);
+                    alert(error.message)
+                });
         }
         else {
             let has_password = false;

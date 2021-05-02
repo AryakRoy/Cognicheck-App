@@ -10,10 +10,11 @@ import DismissKeyboard from '../assets/materials/DismissKeyboard'
 import { TextInput, HelperText } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { auth, storageRef } from "../firebase"
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const [width, height] = dimensions
 
-const Add = () => {
+const Add = ({ navigation }) => {
     const [name, setName] = useState({
         value: '',
         error: false,
@@ -25,6 +26,7 @@ const Add = () => {
         error_message: ''
     })
     const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         (async () => {
             if (Platform.OS !== 'web') {
@@ -63,6 +65,7 @@ const Add = () => {
         })
     }
     const addPatient = async () => {
+        setLoading(true);
         let Age = parseInt(age.value)
         if (image !== null && name.value.length > 0 && Age > 0 && age.value.length > 0) {
             let filename = image.uri.split('/').pop();
@@ -80,35 +83,37 @@ const Add = () => {
                         url: 'http://127.0.0.1:5000/predictor',
                         data: data,
                         headers: {
-                            Accept: 'application/json',
+                            Accept: '*/*',
                             'Content-Type': 'multipart/form-data'
                         },
                     }
                     Axios(config).then((response) => {
-                        { console.log(response) }
+                        { console.log(response.data.result) }
                         let patient = {
-                            name: name,
-                            age: age,
-                            tumor_result: 'Positive',
+                            name: name.value,
+                            age: age.value,
+                            tumor_result: response.data.result,
                             mri_URL: url,
-                            image_width: image.width,
-                            image_height: image_height
                         }
                         navigation.replace('Patient Result', {
                             patient: patient
                         })
                     }).catch((error) => {
+                        setLoading(false);
                         { console.log(error) }
                     })
                 }).catch((error) => {
+                    setLoading(false);
                     alert(error);
                 })
             }).catch((error) => {
+                setLoading(false);
                 alert(error);
             })
 
         }
         else {
+            setLoading(false);
             if (image === null) {
                 alert("MRI Image Required")
             }
@@ -162,6 +167,9 @@ const Add = () => {
     return (
         <DismissKeyboard>
             <View style={styles.container}>
+                <Spinner
+                    visible={loading}
+                />
                 <View style={styles.headerTitleWrapper}>
                     <Text style={styles.headerTitle}>Add a New Patient</Text>
                 </View>

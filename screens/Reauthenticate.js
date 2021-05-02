@@ -17,6 +17,7 @@ import error_messages from '../assets/materials/errorMessages'
 import { auth } from '../firebase'
 import { Ionicons } from '@expo/vector-icons';
 import * as firebase from 'firebase';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const images = {
     "background": require('../assets/images/Background.png'),
@@ -40,6 +41,7 @@ const Reauthenticate = ({ route, navigation }) => {
         error_message: ''
     })
     const [passwordVisibility, setPasswordVisibility] = useState(true)
+    const [loading, setLoading] = useState(false);
     const handleChangePassword = (text) => {
         setPassword((prevState) => {
             return {
@@ -49,6 +51,7 @@ const Reauthenticate = ({ route, navigation }) => {
         })
     }
     const reauthenticate = () => {
+        setLoading(true);
         if (password.value.length >= 6) {
             setPassword((prevState) => {
                 return {
@@ -63,6 +66,7 @@ const Reauthenticate = ({ route, navigation }) => {
                 password.value
             );
             user.reauthenticateWithCredential(credential).then(function () {
+                setLoading(false);
                 if (comeBack) {
                     navigation.goBack()
                 }
@@ -75,6 +79,7 @@ const Reauthenticate = ({ route, navigation }) => {
 
         }
         else {
+            setLoading(false);
             if (password.value.length === 0) {
                 setPassword((prevState) => {
                     return {
@@ -98,6 +103,9 @@ const Reauthenticate = ({ route, navigation }) => {
     return (
         <DismissKeyboard>
             <View style={styles.container}>
+                <Spinner
+                    visible={loading}
+                />
                 <ImageBackground source={images.background} style={styles.background}>
                     <SafeAreaView>
                         <View style={[styles.header, Platform.OS === "ios" ? styles.header_ios : styles.header_android]}>

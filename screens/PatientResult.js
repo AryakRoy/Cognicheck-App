@@ -21,7 +21,7 @@ const PatientResult = ({ route, navigation }) => {
                 <Text style={styles.headerTitle}>Analysis Results</Text>
             </View>
             <View style={styles.MRIWrapper}>
-                <Image source={{ uri: mri_URL }} style={{ width: image_width, height: image_height, alignSelf: 'center' }} />
+                <Image source={{ uri: mri_URL }} style={{ width: 400, height: 400, alignSelf: 'center' }} />
             </View>
             <View style={styles.patientDetails}>
                 <Text style={styles.patientDetail}>Name : {name}</Text>

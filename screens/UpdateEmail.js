@@ -16,7 +16,7 @@ import DismissKeyboard from '../assets/materials/DismissKeyboard'
 import forgotPasswordValidateInfo from '../assets/materials/forgotPasswordValidateInfo'
 import error_messages from '../assets/materials/errorMessages'
 import { auth } from '../firebase'
-
+import Spinner from 'react-native-loading-spinner-overlay';
 const images = {
     "background": require('../assets/images/Background.png'),
 };
@@ -37,6 +37,7 @@ const UpdateEmail = ({ navigation }) => {
         error: false,
         error_message: ''
     })
+    const [loading, setLoading] = useState(false);
     const handleChangeEmail = (text) => {
         setEmail((prevState) => {
             return {
@@ -46,6 +47,7 @@ const UpdateEmail = ({ navigation }) => {
         })
     }
     const resetEmail = () => {
+        setLoading(true);
         setEmail((prevState) => {
             return {
                 ...prevState,
@@ -63,14 +65,17 @@ const UpdateEmail = ({ navigation }) => {
             })
             var user = auth.currentUser;
             user.updateEmail(email.value).then(function () {
+                setLoading(false);
                 alert('Your email has been updated')
                 navigation.replace('HomeTab')
             }).catch(function (error) {
+                setLoading(false);
                 alert(error)
             });
 
         }
         else {
+            setLoading(false);
             setEmail((prevState) => {
                 return {
                     ...prevState,
@@ -83,6 +88,9 @@ const UpdateEmail = ({ navigation }) => {
     return (
         <DismissKeyboard>
             <View style={styles.container}>
+                <Spinner
+                    visible={loading}
+                />
                 <ImageBackground source={images.background} style={styles.background}>
                     <SafeAreaView>
                         <View style={[styles.header, Platform.OS === "ios" ? styles.header_ios : styles.header_android]}>

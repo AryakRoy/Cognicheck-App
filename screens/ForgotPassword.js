@@ -16,6 +16,7 @@ import DismissKeyboard from '../assets/materials/DismissKeyboard'
 import forgotPasswordValidateInfo from '../assets/materials/forgotPasswordValidateInfo'
 import error_messages from '../assets/materials/errorMessages'
 import { auth } from '../firebase'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const images = {
     "background": require('../assets/images/Background.png'),
@@ -37,6 +38,7 @@ const ForgotPassword = ({ navigation }) => {
         error: false,
         error_message: ''
     })
+    const [loading, setLoading] = useState(false);
     const handleChangeEmail = (text) => {
         setEmail((prevState) => {
             return {
@@ -46,6 +48,7 @@ const ForgotPassword = ({ navigation }) => {
         })
     }
     const forgotPassword = () => {
+        setLoading(true)
         setEmail((prevState) => {
             return {
                 ...prevState,
@@ -62,14 +65,17 @@ const ForgotPassword = ({ navigation }) => {
                 }
             })
             auth.sendPasswordResetEmail(email.value).then(function () {
+                setLoading(false);
                 alert('We have sent you a mail to rest your password')
                 navigation.goBack()
             }).catch(function (error) {
+                setLoading(false);
                 alert(error)
             });
 
         }
         else {
+            setLoading(false);
             setEmail((prevState) => {
                 return {
                     ...prevState,
@@ -82,6 +88,9 @@ const ForgotPassword = ({ navigation }) => {
     return (
         <DismissKeyboard>
             <View style={styles.container}>
+                <Spinner
+                    visible={loading}
+                />
                 <ImageBackground source={images.background} style={styles.background}>
                     <SafeAreaView>
                         <View style={[styles.header, Platform.OS === "ios" ? styles.header_ios : styles.header_android]}>

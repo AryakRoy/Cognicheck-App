@@ -17,6 +17,7 @@ import validatePassword from '../assets/materials/validatePassword'
 import error_messages from '../assets/materials/errorMessages'
 import { auth } from '../firebase'
 import { Ionicons } from '@expo/vector-icons';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const images = {
     "background": require('../assets/images/Background.png'),
@@ -44,6 +45,7 @@ const ChangePassword = ({ navigation }) => {
         error_message: ''
     })
     const [passwordVisibility, setPasswordVisibility] = useState(true)
+    const [loading, setLoading] = useState(false)
     const handleChangePassword = (text) => {
         setPassword((prevState) => {
             return {
@@ -61,6 +63,7 @@ const ChangePassword = ({ navigation }) => {
         })
     }
     const changePassword = () => {
+        setLoading(true)
         const result = validatePassword(password.value, confirmPassword.value);
         if (result.status == true) {
             setPassword((prevState) => {
@@ -80,12 +83,17 @@ const ChangePassword = ({ navigation }) => {
             const user = auth.currentUser
             user.updatePassword(password.value)
                 .then(() => {
+                    setLoading(false);
                     alert('Your password has been updated')
                     navigation.replace('HomeTab')
                 })
-                .catch(error => alert(error.message));
+                .catch(error => {
+                    setLoading(false);
+                    alert(error.message);
+                });
         }
         else {
+            setLoading(false);
             setPassword((prevState) => {
                 return {
                     ...prevState,
@@ -105,6 +113,9 @@ const ChangePassword = ({ navigation }) => {
     return (
         <DismissKeyboard>
             <View style={styles.container}>
+                <Spinner
+                    visible={loading}
+                />
                 <ImageBackground source={images.background} style={styles.background}>
                     <SafeAreaView>
                         <View style={Platform.OS === "ios" ? styles.header_ios : styles.header_android}>

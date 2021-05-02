@@ -4,6 +4,7 @@ import { auth, storageRef } from '../firebase'
 import OptionsListItem from '../components/optionsListItem'
 import colors from '../assets/materials/colors'
 import dimensions from '../assets/materials/constants';
+import getInitials from '../assets/materials/getInitials'
 import { Feather, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -19,7 +20,7 @@ const Profile = ({ navigation }) => {
     const [lastLogin, setlastLogin] = useState(null)
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = () => {
             const user = auth.currentUser
             if (user != null) {
                 setname(user.displayName);
@@ -60,6 +61,7 @@ const Profile = ({ navigation }) => {
                         <View style={styles.cardLeft}>
                             <View style={styles.cardHeader}>
                                 <View style={styles.initialsWrapper}>
+                                    <Text style={styles.initials}>{getInitials(name)}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => refRBSheet.current.open()}>
                                     <Feather name="settings" size={32} color={colors.black} />

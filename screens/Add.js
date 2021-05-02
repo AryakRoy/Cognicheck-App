@@ -149,7 +149,7 @@ const Add = () => {
                 })
             }
             else {
-                setName((prevState) => {
+                setAge((prevState) => {
                     return {
                         ...prevState,
                         error: false,
@@ -187,7 +187,7 @@ const Add = () => {
                         style={styles.input}
                         placeholder="Enter Patient's Age"
                         autoCorrect={false}
-                        keyboardType='numeric'
+                        keyboardType='number-pad'
                         value={age.value}
                         error={age.error}
                         onChangeText={(text) => handleChangeAge(text)}

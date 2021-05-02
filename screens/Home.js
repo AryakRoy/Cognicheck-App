@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, FlatList, ImageBackground, Platform } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import colors from '../assets/materials/colors'
@@ -14,13 +14,16 @@ import getFirstName from '../assets/materials/getFirstName';
 const [width, height] = dimensions
 
 const Home = ({ navigation }) => {
-    const user = auth.currentUser
-    let name = null
-    let firstname = null
-    if (user != null) {
-        name = user.displayName;
-        firstname = getFirstName(name);
-    }
+    const [name, setname] = useState('')
+    useEffect(() => {
+        const fetchData = async () => {
+            const user = auth.currentUser
+            if (user != null) {
+                setname(user.displayName)
+            }
+        }
+        fetchData();
+    }, [navigation])
     const renderTutorialItem = ({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('Tutorial', {
             item: item
@@ -62,7 +65,7 @@ const Home = ({ navigation }) => {
                     </View>
                 </SafeAreaView>
                 <View style={styles.headerWrapper}>
-                    <Text style={styles.header}>{`Hello ${firstname}`}</Text>
+                    <Text style={styles.header}>{`Hello ${getFirstName(name)}`}</Text>
                 </View>
                 <View style={styles.tutorialWrapper}>
                     <Text style={styles.tutorialTitle}>Tutorial</Text>

@@ -18,6 +18,7 @@ import loginValidateInfo from '../assets/materials/loginValidateInfo'
 import error_messages from '../assets/materials/errorMessages'
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebase'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const images = {
     "background": require('../assets/images/Background.png'),
@@ -46,7 +47,7 @@ const Login = ({ navigation }) => {
         error_message: ''
     })
     const [passwordVisibility, setPasswordVisibility] = useState(true)
-
+    const [loading, setLoading] = useState(false)
     const handleChangeEmail = (text) => {
         setEmail((prevState) => {
             return {
@@ -68,6 +69,7 @@ const Login = ({ navigation }) => {
     const handleForgotPasswordPress = () => navigation.navigate('Forgot Password')
 
     const login = () => {
+        setLoading(true);
         setEmail((prevState) => {
             return {
                 ...prevState,
@@ -77,10 +79,13 @@ const Login = ({ navigation }) => {
         const result = loginValidateInfo(email.value, password.value);
         if (result.status == true) {
             auth
-                .signInWithEmailAndPassword(email.value, password.value)
+                .signInWithEmailAndPassword(email.value, password.value).then((userCred) => {
+                    setLoading(false);
+                })
                 .catch((error) => alert(error));
         }
         else {
+            setLoading(false);
             let has_password = false;
             let has_email = false;
             for (let key in result.messages) {
@@ -132,6 +137,9 @@ const Login = ({ navigation }) => {
     return (
         <DismissKeyboard>
             <View style={styles.container}>
+                <Spinner
+                    visible={loading}
+                />
                 <ImageBackground source={images.background} style={styles.background}>
                     <SafeAreaView>
                         <View style={[styles.header, Platform.OS === "ios" ? styles.header_ios : styles.header_android]}>

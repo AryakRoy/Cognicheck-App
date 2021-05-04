@@ -71,46 +71,48 @@ const Add = ({ navigation }) => {
             let filename = image.uri.split('/').pop();
             let filetype = filename.split('.').pop();
             let uri = image.uri
-            const response = await fetch(uri);
-            const file = await response.blob();
-            imageRef = storageRef.child(`${auth.currentUser.uid}/${name.value}.${filetype}`);
-            imageRef.put(file).then((snapshot) => {
-                imageRef.getDownloadURL().then((url) => {
-                    const data = new FormData();
-                    data.append('mri', url);
-                    let config = {
-                        method: 'POST',
-                        url: 'http://127.0.0.1:5000/predictor',
-                        data: data,
-                        headers: {
-                            Accept: '*/*',
-                            'Content-Type': 'multipart/form-data'
-                        },
-                    }
-                    Axios(config).then((response) => {
-                        { console.log(response.data.result) }
-                        let patient = {
-                            name: name.value,
-                            age: age.value,
-                            tumor_result: response.data.result,
-                            mri_URL: url,
-                        }
-                        navigation.replace('Patient Result', {
-                            patient: patient
+            try {
+                const response = await fetch(uri);
+                const file = await response.blob();
+                imageRef = storageRef.child(`${auth.currentUser.uid}/${name.value}.${filetype}`);
+                imageRef.put(file).then((snapshot) => {
+                    imageRef.getDownloadURL().then((mri_url) => {
+                        const data = JSON.stringify({
+                            mri: mri_url
+                        })
+                        let url = 'http://127.0.0.1:5000/'
+                        Axios.post(url, data, {
+                            "headers": {
+                                "content-type": "application/json",
+                            }
+                        }).then((response) => {
+                            let patient = {
+                                name: name.value,
+                                age: age.value,
+                                tumor_result: response.data.result,
+                                mri_URL: mri_url,
+                                image_width: image.width,
+                                image_height: image.height
+                            }
+                            navigation.replace('Patient Result', {
+                                patient: patient
+                            })
+                        }).catch((error) => {
+                            setLoading(false);
+                            alert("Encountered an Error while analysing. Please Try Again")
                         })
                     }).catch((error) => {
                         setLoading(false);
-                        { console.log(error) }
+                        alert(error);
                     })
                 }).catch((error) => {
                     setLoading(false);
                     alert(error);
                 })
-            }).catch((error) => {
-                setLoading(false);
-                alert(error);
-            })
-
+            }
+            catch (error) {
+                alert('Please Try Again')
+            }
         }
         else {
             setLoading(false);

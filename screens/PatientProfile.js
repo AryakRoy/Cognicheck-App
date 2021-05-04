@@ -1,9 +1,9 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
-import patientData from '../assets/data/patientData';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import colors from '../assets/materials/colors';
 import dimensions from '../assets/materials/constants';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 const [width, height] = dimensions
 
@@ -18,7 +18,8 @@ const PatientProfile = ({ route, navigation }) => {
             headerLeftContainerStyle: { paddingHorizontal: 10 }
         })
     }, [navigation])
-    return (
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    return isModalVisible === false ? (
         <ScrollView>
             <View style={styles.container}>
                 <View style={styles.patientNameWrapper}>
@@ -28,11 +29,26 @@ const PatientProfile = ({ route, navigation }) => {
                     <Text style={styles.text}>Age : {patient.age}</Text>
                     <Text style={styles.text}>Tumor : {patient.diagnosis}</Text>
                     {patient.diagnosis === "Positive" ? <Text style={styles.text}>Tumor Type : {patient.tumorType}</Text> : null}
+                    <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                        <Image style={styles.mriImage} source={patient.mriImage} />
+                    </TouchableOpacity>
                 </View>
-                <Image style={styles.mriImage} source={patient.mriImage} />
             </View>
         </ScrollView>
-    )
+    ) :
+        (
+            <ImageZoom cropWidth={width}
+                cropHeight={height}
+                imageWidth={300}
+                imageHeight={300}
+                enableSwipeDown={true}
+                panToMove={true}
+                onSwipeDown={() => setIsModalVisible(false)}
+            >
+                <Image style={{ width: 300, height: 300 }}
+                    source={patient.mriImage} />
+            </ImageZoom>
+        )
 }
 
 export default PatientProfile

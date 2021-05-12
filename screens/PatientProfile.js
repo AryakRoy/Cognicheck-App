@@ -29,10 +29,10 @@ const PatientProfile = ({ route, navigation }) => {
                     <Text style={styles.text}>Age : {patient.age}</Text>
                     <Text style={styles.text}>Tumor : {patient.diagnosis}</Text>
                     {patient.diagnosis === "Positive" ? <Text style={styles.text}>Tumor Type : {patient.tumorType}</Text> : null}
-                    <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-                        <Image style={styles.mriImage} source={patient.mriImage} />
-                    </TouchableOpacity>
                 </View>
+                <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                    <Image style={styles.mriImage} source={patient.mriImage} />
+                </TouchableOpacity>
             </View>
         </ScrollView>
     ) :

@@ -20,7 +20,7 @@ const Info = ({ navigation }) => {
     return (
         <View>
             <Image source={icon} style={styles.icon} />
-            <Text style={styles.text}>Cognicheck is a deep learning based application used for detecting and classifying brain tumors based on their location as glioma, meningioma, or pituatory adenoma.</Text>
+            <Text style={styles.text}>Cognicheck is a deep learning based application used for detecting and classifying brain tumors based on their location on an MRI Image as glioma, meningioma, or pituatory adenoma.</Text>
             <Text style={styles.text}>It is intended for physicians, surgeons and clinical researchers for managing patient’s data at a centralized location.</Text>
             <Text style={styles.developerTitle}>Developers</Text>
             <View style={styles.developers}>

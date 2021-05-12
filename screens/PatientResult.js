@@ -19,13 +19,8 @@ const PatientResult = ({ route, navigation }) => {
         })
     }, [navigation]);
     const { patient } = route.params;
-    const { name, age, tumor_result, mri_URL, image_width, image_height } = patient;
-    const customHeader = () => {
-        return <>
-            <Button title="Close" onPress={() => setIsModalVisible(false)} />
-        </>
-    }
-    const [isModalVisible, setIsModalVisible] = useState(true)
+    const { name, age, tumor_result, tumor_type, mri_URL, image_width, image_height } = patient;
+    const [isModalVisible, setIsModalVisible] = useState(false)
     return isModalVisible === false ? (
         <View style={styles.container}>
             <View style={styles.headerTitleWrapper}>
@@ -38,7 +33,7 @@ const PatientResult = ({ route, navigation }) => {
                 <Text style={styles.patientDetail}>Name : {name}</Text>
                 <Text style={styles.patientDetail}>Age : {age}</Text>
                 <Text style={styles.patientDetail}>Tumor : {tumor_result}</Text>
-                {tumor_result === "Positive" && <Text style={styles.patientDetail}>Type : Meningioma</Text>}
+                {tumor_result === "Positive" && <Text style={styles.patientDetail}>Type : {tumor_type}</Text>}
             </View>
             <GradientButton
                 buttonText="Back to Home"

@@ -89,7 +89,8 @@ const Add = ({ navigation }) => {
                             let patient = {
                                 name: name.value,
                                 age: age.value,
-                                tumor_result: response.data.result,
+                                tumor_result: response.data.pred_result,
+                                tumor_type: response.data.class_result,
                                 mri_URL: mri_url,
                                 image_width: image.width,
                                 image_height: image.height
@@ -99,7 +100,7 @@ const Add = ({ navigation }) => {
                             })
                         }).catch((error) => {
                             setLoading(false);
-                            alert("Encountered an Error while analysing. Please Try Again")
+                            alert("Please Try Again")
                         })
                     }).catch((error) => {
                         setLoading(false);
@@ -209,7 +210,7 @@ const Add = ({ navigation }) => {
                         <Text style={styles.uploadButton}>Upload MRI</Text>
                     </TouchableOpacity>
                 </View>
-                {image && <Image source={{ uri: image.uri }} style={{ marginVertical: 50, alignSelf: 'center', width: image.width > 400 ? image.width / 10 : image.width, height: image.height > 400 ? image.height / 10 : image.height }} />}
+                {image && <Image source={{ uri: image.uri }} style={{ marginVertical: 50, alignSelf: 'center', width: image.width > 400 ? image.width * 0.5 : image.width, height: image.height > 400 ? image.height * 0.5 : image.height }} />}
                 <GradientButton
                     buttonText="Create Patient Profile"
                     style={styles.addButton}
